@@ -5,6 +5,8 @@
 #ifndef TYPE_SAFE_BOOLEAN_HPP_INCLUDED
 #define TYPE_SAFE_BOOLEAN_HPP_INCLUDED
 
+#include <cppstd.h>
+
 #include <iosfwd>
 #include <type_traits>
 #include <utility>
@@ -53,29 +55,39 @@ namespace type_safe
         /// \param 1
         /// \exclude
         template <typename T, typename = detail::enable_boolean<T>>
-        TYPE_SAFE_FORCE_INLINE constexpr boolean(T value) noexcept : value_(value)
+        TYPE_SAFE_FORCE_INLINE CONSTEXPR boolean(T value) NOEXCEPT : value_(value)
         {
         }
+
+
 
         /// \effects Assigns the given `value` to the boolean.
         /// \notes This function does not participate in overload resolution if `T` is not a boolean type.
         /// \param 1
         /// \exclude
         template <typename T, typename = detail::enable_boolean<T>>
-        TYPE_SAFE_FORCE_INLINE boolean& operator=(T value) noexcept
+        TYPE_SAFE_FORCE_INLINE boolean& operator=(T value) NOEXCEPT
         {
             value_ = value;
             return *this;
         }
 
         /// \returns The stored `bool` value.
-        TYPE_SAFE_FORCE_INLINE explicit constexpr operator bool() const noexcept
+
+        /*
+        TYPE_SAFE_FORCE_INLINE explicit CONSTEXPR operator bool() const NOEXCEPT
+        {
+            return value_;
+        }*/
+        //explicit CONSTEXPR operator bool() const NOEXCEPT
+        explicit operator bool() const NOEXCEPT
         {
             return value_;
         }
 
+
         /// \returns The same as `!static_cast<bool>(*this)`.
-        TYPE_SAFE_FORCE_INLINE constexpr boolean operator!() const noexcept
+        TYPE_SAFE_FORCE_INLINE CONSTEXPR boolean operator!() const NOEXCEPT
         {
             return boolean(!value_);
         }
@@ -92,7 +104,7 @@ namespace type_safe
     /// \notes (2)/(3) do not participate in overload resolution if `T` is not a boolean type.
     /// \group boolean_comp_equal
     /// \module types
-    TYPE_SAFE_FORCE_INLINE constexpr bool operator==(const boolean& a, const boolean& b) noexcept
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR bool operator==(const boolean& a, const boolean& b) NOEXCEPT
     {
         return static_cast<bool>(a) == static_cast<bool>(b);
     }
@@ -101,7 +113,7 @@ namespace type_safe
     /// \param 1
     /// \exclude
     template <typename T, typename = detail::enable_boolean<T>>
-    TYPE_SAFE_FORCE_INLINE constexpr bool operator==(const boolean& a, T b) noexcept
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR bool operator==(const boolean& a, T b) NOEXCEPT
     {
         return static_cast<bool>(a) == static_cast<bool>(b);
     }
@@ -110,7 +122,7 @@ namespace type_safe
     /// \param 1
     /// \exclude
     template <typename T, typename = detail::enable_boolean<T>>
-    TYPE_SAFE_FORCE_INLINE constexpr bool operator==(T a, const boolean& b) noexcept
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR bool operator==(T a, const boolean& b) NOEXCEPT
     {
         return static_cast<bool>(a) == static_cast<bool>(b);
     }
@@ -122,7 +134,7 @@ namespace type_safe
     /// \notes (2)/(3) do not participate in overload resolution if `T` is not a boolean type.
     /// \group boolean_comp_unequal
     /// \module types
-    TYPE_SAFE_FORCE_INLINE constexpr bool operator!=(const boolean& a, const boolean& b) noexcept
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR bool operator!=(const boolean& a, const boolean& b) NOEXCEPT
     {
         return static_cast<bool>(a) != static_cast<bool>(b);
     }
@@ -131,7 +143,7 @@ namespace type_safe
     /// \param 1
     /// \exclude
     template <typename T, typename = detail::enable_boolean<T>>
-    TYPE_SAFE_FORCE_INLINE constexpr bool operator!=(const boolean& a, T b) noexcept
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR bool operator!=(const boolean& a, T b) NOEXCEPT
     {
         return static_cast<bool>(a) != static_cast<bool>(b);
     }
@@ -140,7 +152,7 @@ namespace type_safe
     /// \param 1
     /// \exclude
     template <typename T, typename = detail::enable_boolean<T>>
-    TYPE_SAFE_FORCE_INLINE constexpr bool operator!=(T a, const boolean& b) noexcept
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR bool operator!=(T a, const boolean& b) NOEXCEPT
     {
         return static_cast<bool>(a) != static_cast<bool>(b);
     }
@@ -178,8 +190,8 @@ namespace type_safe
         using is_transparent = int;                                                                \
                                                                                                    \
         template <typename T1, typename T2>                                                        \
-        constexpr bool operator()(T1&& a, T2&& b) const                                            \
-            noexcept(noexcept(std::forward<T1>(a) Op std::forward<T2>(b)))                         \
+        CONSTEXPR bool operator()(T1&& a, T2&& b) const                                            \
+            BOOST_NOEXCEPT_IF(BOOST_NOEXCEPT_EXPR( std::forward<T1>(a) Op std::forward<T2>(b) ))                         \
         {                                                                                          \
             return static_cast<bool>(std::forward<T1>(a) Op std::forward<T2>(b));                  \
         }                                                                                          \

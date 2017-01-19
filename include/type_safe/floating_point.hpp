@@ -94,7 +94,7 @@ namespace type_safe
         /// \exclude
         template <typename T,
                   typename = detail::enable_safe_floating_point_conversion<T, floating_point_type>>
-        TYPE_SAFE_FORCE_INLINE constexpr floating_point(const T& val) noexcept : value_(val)
+        TYPE_SAFE_FORCE_INLINE CONSTEXPR floating_point(const T& val) NOEXCEPT : value_(val)
         {
         }
 
@@ -103,7 +103,7 @@ namespace type_safe
         /// \exclude
         template <typename T,
                   typename = detail::enable_safe_floating_point_conversion<T, floating_point_type>>
-        TYPE_SAFE_FORCE_INLINE constexpr floating_point(const floating_point<T>& val) noexcept
+        TYPE_SAFE_FORCE_INLINE CONSTEXPR floating_point(const floating_point<T>& val) NOEXCEPT
         : value_(static_cast<T>(val))
         {
         }
@@ -112,7 +112,7 @@ namespace type_safe
         template <
             typename T,
             typename = detail::fallback_safe_floating_point_conversion<T, floating_point_type>>
-        constexpr floating_point(T) = delete;
+        CONSTEXPR floating_point(T) = delete;
 
         //=== assignment ===//
         /// \effects Assigns the floating point the given value.
@@ -123,7 +123,7 @@ namespace type_safe
         /// \exclude
         template <typename T,
                   typename = detail::enable_safe_floating_point_conversion<T, floating_point_type>>
-        TYPE_SAFE_FORCE_INLINE floating_point& operator=(const T& val) noexcept
+        TYPE_SAFE_FORCE_INLINE floating_point& operator=(const T& val) NOEXCEPT
         {
             value_ = val;
             return *this;
@@ -134,7 +134,7 @@ namespace type_safe
         /// \exclude
         template <typename T,
                   typename = detail::enable_safe_floating_point_conversion<T, floating_point_type>>
-        TYPE_SAFE_FORCE_INLINE floating_point& operator=(const floating_point<T>& val) noexcept
+        TYPE_SAFE_FORCE_INLINE floating_point& operator=(const floating_point<T>& val) NOEXCEPT
         {
             value_ = static_cast<T>(val);
             return *this;
@@ -149,26 +149,26 @@ namespace type_safe
         //=== conversion back ===//
         /// \returns The stored value as the native floating point type.
         /// \group conversion
-        TYPE_SAFE_FORCE_INLINE explicit constexpr operator floating_point_type() const noexcept
+        TYPE_SAFE_FORCE_INLINE explicit CONSTEXPR operator floating_point_type() const NOEXCEPT
         {
             return value_;
         }
 
         /// \group conversion
-        TYPE_SAFE_FORCE_INLINE constexpr floating_point_type get() const noexcept
+        TYPE_SAFE_FORCE_INLINE CONSTEXPR floating_point_type get() const NOEXCEPT
         {
             return value_;
         }
 
         //=== unary operators ===//
         /// \returns The value unchanged.
-        TYPE_SAFE_FORCE_INLINE constexpr floating_point operator+() const noexcept
+        TYPE_SAFE_FORCE_INLINE CONSTEXPR floating_point operator+() const NOEXCEPT
         {
             return *this;
         }
 
         /// \returns The negative value.
-        TYPE_SAFE_FORCE_INLINE constexpr floating_point operator-() const noexcept
+        TYPE_SAFE_FORCE_INLINE CONSTEXPR floating_point operator-() const NOEXCEPT
         {
             return -value_;
         }
@@ -184,7 +184,7 @@ namespace type_safe
      */        \
     template <typename T,                                                                          \
               typename = detail::enable_safe_floating_point_conversion<T, floating_point_type>>    \
-    TYPE_SAFE_FORCE_INLINE floating_point& operator Op(const T& other) noexcept                    \
+    TYPE_SAFE_FORCE_INLINE floating_point& operator Op(const T& other) NOEXCEPT                    \
     {                                                                                              \
         return *this Op floating_point<T>(other);                                                  \
     }                                                                                              \
@@ -206,7 +206,7 @@ namespace type_safe
         /// \exclude
         template <typename T,
                   typename = detail::enable_safe_floating_point_conversion<T, floating_point_type>>
-        TYPE_SAFE_FORCE_INLINE floating_point& operator+=(const floating_point<T>& other) noexcept
+        TYPE_SAFE_FORCE_INLINE floating_point& operator+=(const floating_point<T>& other) NOEXCEPT
         {
             value_ += static_cast<T>(other);
             return *this;
@@ -218,7 +218,7 @@ namespace type_safe
         /// \exclude
         template <typename T,
                   typename = detail::enable_safe_floating_point_conversion<T, floating_point_type>>
-        TYPE_SAFE_FORCE_INLINE floating_point& operator-=(const floating_point<T>& other) noexcept
+        TYPE_SAFE_FORCE_INLINE floating_point& operator-=(const floating_point<T>& other) NOEXCEPT
         {
             value_ -= static_cast<T>(other);
             return *this;
@@ -230,7 +230,7 @@ namespace type_safe
         /// \exclude
         template <typename T,
                   typename = detail::enable_safe_floating_point_conversion<T, floating_point_type>>
-        TYPE_SAFE_FORCE_INLINE floating_point& operator*=(const floating_point<T>& other) noexcept
+        TYPE_SAFE_FORCE_INLINE floating_point& operator*=(const floating_point<T>& other) NOEXCEPT
         {
             value_ *= static_cast<T>(other);
             return *this;
@@ -242,7 +242,7 @@ namespace type_safe
         /// \exclude
         template <typename T,
                   typename = detail::enable_safe_floating_point_conversion<T, floating_point_type>>
-        TYPE_SAFE_FORCE_INLINE floating_point& operator/=(const floating_point<T>& other) noexcept
+        TYPE_SAFE_FORCE_INLINE floating_point& operator/=(const floating_point<T>& other) NOEXCEPT
         {
             value_ /= static_cast<T>(other);
             return *this;
@@ -263,7 +263,7 @@ namespace type_safe
      * \exclude */                                       \
     template <typename A, typename B,                                                              \
               typename = detail::enable_safe_floating_point_conversion<A, B>>                      \
-    TYPE_SAFE_FORCE_INLINE constexpr bool operator Op(const A& a, const floating_point<B>& b)      \
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR bool operator Op(const A& a, const floating_point<B>& b)      \
     {                                                                                              \
         return floating_point<A>(a) Op b;                                                          \
     }                                                                                              \
@@ -272,22 +272,22 @@ namespace type_safe
      * \exclude  */                                      \
     template <typename A, typename B,                                                              \
               typename = detail::enable_safe_floating_point_comparision<A, B>>                     \
-    TYPE_SAFE_FORCE_INLINE constexpr bool operator Op(const floating_point<A>& a, const B& b)      \
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR bool operator Op(const floating_point<A>& a, const B& b)      \
     {                                                                                              \
         return a Op floating_point<B>(b);                                                          \
     }                                                                                              \
     /** \exclude */                                                                                \
     template <typename A, typename B,                                                              \
               typename = detail::fallback_safe_floating_point_comparision<A, B>>                   \
-    constexpr bool operator Op(floating_point<A>, floating_point<B>) = delete;                     \
+    CONSTEXPR bool operator Op(floating_point<A>, floating_point<B>) = delete;                     \
     /** \exclude */                                                                                \
     template <typename A, typename B,                                                              \
               typename = detail::fallback_safe_floating_point_comparision<A, B>>                   \
-    constexpr bool operator Op(A, floating_point<B>) = delete;                                     \
+    CONSTEXPR bool operator Op(A, floating_point<B>) = delete;                                     \
     /** \exclude */                                                                                \
     template <typename A, typename B,                                                              \
               typename = detail::fallback_safe_floating_point_comparision<A, B>>                   \
-    constexpr bool operator Op(floating_point<A>, B) = delete;
+    CONSTEXPR bool operator Op(floating_point<A>, B) = delete;
 
     /// \returns The result of the comparison of the stored floating point value in the [ts::floating_point]().
     /// \notes These functions do not participate in overload resolution
@@ -298,8 +298,8 @@ namespace type_safe
     /// \exclude
     template <typename A, typename B,
               typename = detail::enable_safe_floating_point_comparision<A, B>>
-    TYPE_SAFE_FORCE_INLINE constexpr bool operator<(const floating_point<A>& a,
-                                                    const floating_point<B>& b) noexcept
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR bool operator<(const floating_point<A>& a,
+                                                    const floating_point<B>& b) NOEXCEPT
     {
         return static_cast<A>(a) < static_cast<B>(b);
     }
@@ -310,8 +310,8 @@ namespace type_safe
     /// \exclude
     template <typename A, typename B,
               typename = detail::enable_safe_floating_point_comparision<A, B>>
-    TYPE_SAFE_FORCE_INLINE constexpr bool operator<=(const floating_point<A>& a,
-                                                     const floating_point<B>& b) noexcept
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR bool operator<=(const floating_point<A>& a,
+                                                     const floating_point<B>& b) NOEXCEPT
     {
         return static_cast<A>(a) <= static_cast<B>(b);
     }
@@ -322,8 +322,8 @@ namespace type_safe
     /// \exclude
     template <typename A, typename B,
               typename = detail::enable_safe_floating_point_comparision<A, B>>
-    TYPE_SAFE_FORCE_INLINE constexpr bool operator>(const floating_point<A>& a,
-                                                    const floating_point<B>& b) noexcept
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR bool operator>(const floating_point<A>& a,
+                                                    const floating_point<B>& b) NOEXCEPT
     {
         return static_cast<A>(a) > static_cast<B>(b);
     }
@@ -334,8 +334,8 @@ namespace type_safe
     /// \exclude
     template <typename A, typename B,
               typename = detail::enable_safe_floating_point_comparision<A, B>>
-    TYPE_SAFE_FORCE_INLINE constexpr bool operator>=(const floating_point<A>& a,
-                                                     const floating_point<B>& b) noexcept
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR bool operator>=(const floating_point<A>& a,
+                                                     const floating_point<B>& b) NOEXCEPT
     {
         return static_cast<A>(a) >= static_cast<B>(b);
     }
@@ -349,29 +349,29 @@ namespace type_safe
 #define TYPE_SAFE_DETAIL_MAKE_OP(Op)                                                               \
     /** \group float_binary_op */                                                                  \
     template <typename A, typename B>                                                              \
-    TYPE_SAFE_FORCE_INLINE constexpr auto operator Op(const A&                 a,                  \
-                                                      const floating_point<B>& b) noexcept         \
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR auto operator Op(const A&                 a,                  \
+                                                      const floating_point<B>& b) NOEXCEPT         \
         ->detail::floating_point_result_t<A, B>                                                    \
     {                                                                                              \
         return floating_point<A>(a) Op b;                                                          \
     }                                                                                              \
     /** \group float_binary_op */                                                                  \
     template <typename A, typename B>                                                              \
-    TYPE_SAFE_FORCE_INLINE constexpr auto operator Op(const floating_point<A>& a,                  \
-                                                      const B&                 b) noexcept         \
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR auto operator Op(const floating_point<A>& a,                  \
+                                                      const B&                 b) NOEXCEPT         \
         ->detail::floating_point_result_t<A, B>                                                    \
     {                                                                                              \
         return a Op floating_point<B>(b);                                                          \
     }                                                                                              \
     /** \exclude */                                                                                \
     template <typename A, typename B, typename = detail::fallback_floating_point_result<A, B>>     \
-    constexpr int operator Op(floating_point<A>, floating_point<B>) noexcept = delete;             \
+    CONSTEXPR int operator Op(floating_point<A>, floating_point<B>) NOEXCEPT = delete;             \
     /** \exclude */                                                                                \
     template <typename A, typename B, typename = detail::fallback_floating_point_result<A, B>>     \
-    constexpr int operator Op(A, floating_point<B>) noexcept = delete;                             \
+    CONSTEXPR int operator Op(A, floating_point<B>) NOEXCEPT = delete;                             \
     /** \exclude */                                                                                \
     template <typename A, typename B, typename = detail::fallback_floating_point_result<A, B>>     \
-    constexpr int operator Op(floating_point<A>, B) noexcept = delete;
+    CONSTEXPR int operator Op(floating_point<A>, B) NOEXCEPT = delete;
 
     /// \returns The result of the binary operation of the stored floating point value in the [ts::floating_point]().
     /// The type is a [ts::floating_point]() of the bigger floating point type.
@@ -380,8 +380,8 @@ namespace type_safe
     /// \module types
     /// \group float_binary_op Binary operations
     template <typename A, typename B>
-    TYPE_SAFE_FORCE_INLINE constexpr auto operator+(const floating_point<A>& a,
-                                                    const floating_point<B>& b) noexcept
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR auto operator+(const floating_point<A>& a,
+                                                    const floating_point<B>& b) NOEXCEPT
         -> detail::floating_point_result_t<A, B>
     {
         return static_cast<A>(a) + static_cast<B>(b);
@@ -390,8 +390,8 @@ namespace type_safe
 
     /// \group float_binary_op
     template <typename A, typename B>
-    TYPE_SAFE_FORCE_INLINE constexpr auto operator-(const floating_point<A>& a,
-                                                    const floating_point<B>& b) noexcept
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR auto operator-(const floating_point<A>& a,
+                                                    const floating_point<B>& b) NOEXCEPT
         -> detail::floating_point_result_t<A, B>
     {
         return static_cast<A>(a) - static_cast<B>(b);
@@ -400,8 +400,8 @@ namespace type_safe
 
     /// \group float_binary_op
     template <typename A, typename B>
-    TYPE_SAFE_FORCE_INLINE constexpr auto operator*(const floating_point<A>& a,
-                                                    const floating_point<B>& b) noexcept
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR auto operator*(const floating_point<A>& a,
+                                                    const floating_point<B>& b) NOEXCEPT
         -> detail::floating_point_result_t<A, B>
     {
         return static_cast<A>(a) * static_cast<B>(b);
@@ -410,8 +410,8 @@ namespace type_safe
 
     /// \group float_binary_op
     template <typename A, typename B>
-    TYPE_SAFE_FORCE_INLINE constexpr auto operator/(const floating_point<A>& a,
-                                                    const floating_point<B>& b) noexcept
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR auto operator/(const floating_point<A>& a,
+                                                    const floating_point<B>& b) NOEXCEPT
         -> detail::floating_point_result_t<A, B>
     {
         return static_cast<A>(a) / static_cast<B>(b);

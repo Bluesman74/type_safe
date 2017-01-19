@@ -116,7 +116,7 @@ namespace type_safe
         /// \param 1
         /// \exclude
         template <typename T, typename = detail::enable_safe_integer_conversion<T, integer_type>>
-        TYPE_SAFE_FORCE_INLINE constexpr integer(const T& val) : value_(val)
+        TYPE_SAFE_FORCE_INLINE CONSTEXPR integer(const T& val) : value_(val)
         {
         }
 
@@ -124,14 +124,14 @@ namespace type_safe
         /// \param 1
         /// \exclude
         template <typename T, typename = detail::enable_safe_integer_conversion<T, integer_type>>
-        TYPE_SAFE_FORCE_INLINE constexpr integer(const integer<T, Policy>& val)
+        TYPE_SAFE_FORCE_INLINE CONSTEXPR integer(const integer<T, Policy>& val)
         : value_(static_cast<T>(val))
         {
         }
 
         /// \exclude
         template <typename T, typename = detail::fallback_safe_integer_conversion<T, integer_type>>
-        constexpr integer(T) = delete;
+        CONSTEXPR integer(T) = delete;
 
         //=== assignment ===//
         /// \effects Initializes it with the given value.
@@ -164,27 +164,27 @@ namespace type_safe
         //=== conversion back ===//
         /// \returns The stored value as the native integer type.
         /// \group conversion
-        TYPE_SAFE_FORCE_INLINE explicit constexpr operator integer_type() const noexcept
+        TYPE_SAFE_FORCE_INLINE explicit CONSTEXPR operator integer_type() const NOEXCEPT
         {
             return value_;
         }
 
         /// \group conversion
-        TYPE_SAFE_FORCE_INLINE constexpr integer_type get() const noexcept
+        TYPE_SAFE_FORCE_INLINE CONSTEXPR integer_type get() const NOEXCEPT
         {
             return value_;
         }
 
         //=== unary operators ===//
         /// \returns The integer type unchanged.
-        TYPE_SAFE_FORCE_INLINE constexpr integer operator+() const
+        TYPE_SAFE_FORCE_INLINE CONSTEXPR integer operator+() const
         {
             return *this;
         }
 
         /// \returns The negative integer type.
         /// \requires The integer type must not be unsigned.
-        TYPE_SAFE_FORCE_INLINE constexpr integer operator-() const
+        TYPE_SAFE_FORCE_INLINE CONSTEXPR integer operator-() const
         {
             static_assert(std::is_signed<integer_type>::value,
                           "cannot call unary minus on unsigned integer");
@@ -348,7 +348,7 @@ namespace type_safe
     /// \exclude
     template <typename Integer,
               typename = typename std::enable_if<detail::is_integer<Integer>::value>::type>
-    TYPE_SAFE_FORCE_INLINE constexpr make_signed_t<Integer> make_signed(const Integer& i)
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR make_signed_t<Integer> make_signed(const Integer& i)
     {
         using result_type = make_signed_t<Integer>;
         return i <= Integer(std::numeric_limits<result_type>::max()) ?
@@ -363,7 +363,7 @@ namespace type_safe
     /// \requires The value of `i` must fit into signed type.
     /// \module types
     template <typename Integer, class Policy>
-    TYPE_SAFE_FORCE_INLINE constexpr make_signed_t<integer<Integer, Policy>> make_signed(
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR make_signed_t<integer<Integer, Policy>> make_signed(
         const integer<Integer, Policy>& i)
     {
         return make_signed(static_cast<Integer>(i));
@@ -382,7 +382,7 @@ namespace type_safe
     /// \exclude
     template <typename Integer,
               typename = typename std::enable_if<detail::is_integer<Integer>::value>::type>
-    TYPE_SAFE_FORCE_INLINE constexpr make_unsigned_t<Integer> make_unsigned(const Integer& i)
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR make_unsigned_t<Integer> make_unsigned(const Integer& i)
     {
         using result_type = make_unsigned_t<Integer>;
         return i >= Integer(0) ? static_cast<result_type>(i) :
@@ -395,7 +395,7 @@ namespace type_safe
     /// \requires The value of `i` must not be negative.
     /// \module types
     template <typename Integer, class Policy>
-    TYPE_SAFE_FORCE_INLINE constexpr make_unsigned_t<integer<Integer, Policy>> make_unsigned(
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR make_unsigned_t<integer<Integer, Policy>> make_unsigned(
         const integer<Integer, Policy>& i)
     {
         return make_unsigned(static_cast<Integer>(i));
@@ -408,7 +408,7 @@ namespace type_safe
     /// \exclude
     template <typename SignedInteger,
               typename = typename std::enable_if<std::is_signed<SignedInteger>::value>::type>
-    TYPE_SAFE_FORCE_INLINE constexpr make_unsigned_t<SignedInteger> abs(const SignedInteger& i)
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR make_unsigned_t<SignedInteger> abs(const SignedInteger& i)
     {
         return make_unsigned(i > 0 ? i : -1);
     }
@@ -419,7 +419,7 @@ namespace type_safe
     /// \exclude
     template <typename SignedInteger, class Policy,
               typename = typename std::enable_if<std::is_signed<SignedInteger>::value>::type>
-    TYPE_SAFE_FORCE_INLINE constexpr make_unsigned_t<integer<SignedInteger, Policy>> abs(
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR make_unsigned_t<integer<SignedInteger, Policy>> abs(
         const integer<SignedInteger, Policy>& i)
     {
         return make_unsigned(i > 0 ? i : -i);
@@ -432,7 +432,7 @@ namespace type_safe
     /// \exclude
     template <typename UnsignedInteger,
               typename = typename std::enable_if<std::is_unsigned<UnsignedInteger>::value>::type>
-    TYPE_SAFE_FORCE_INLINE constexpr UnsignedInteger abs(const UnsignedInteger& i)
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR UnsignedInteger abs(const UnsignedInteger& i)
     {
         return i;
     }
@@ -444,7 +444,7 @@ namespace type_safe
     /// \exclude
     template <typename UnsignedInteger, class Policy,
               typename = typename std::enable_if<std::is_unsigned<UnsignedInteger>::value>::type>
-    TYPE_SAFE_FORCE_INLINE constexpr integer<UnsignedInteger, Policy> abs(
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR integer<UnsignedInteger, Policy> abs(
         const integer<UnsignedInteger, Policy>& i)
     {
         return i;
@@ -458,7 +458,7 @@ namespace type_safe
      * \exclude */                                         \
     template <typename A, typename B, class Policy,                                                \
               typename = detail::enable_safe_integer_conversion<A, B>>                             \
-    TYPE_SAFE_FORCE_INLINE constexpr bool operator Op(const A& a, const integer<B, Policy>& b)     \
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR bool operator Op(const A& a, const integer<B, Policy>& b)     \
     {                                                                                              \
         return integer<A, Policy>(a) Op b;                                                         \
     }                                                                                              \
@@ -467,22 +467,22 @@ namespace type_safe
      * \exclude */                                         \
     template <typename A, class Policy, typename B,                                                \
               typename = detail::enable_safe_integer_conversion<A, B>>                             \
-    TYPE_SAFE_FORCE_INLINE constexpr bool operator Op(const integer<A, Policy>& a, const B& b)     \
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR bool operator Op(const integer<A, Policy>& a, const B& b)     \
     {                                                                                              \
         return a Op integer<B, Policy>(b);                                                         \
     }                                                                                              \
     /** \exclude */                                                                                \
     template <typename A, class Policy, typename B,                                                \
               typename = detail::fallback_safe_integer_comparision<A, B>>                          \
-    constexpr bool operator Op(integer<A, Policy>, integer<B, Policy>) = delete;                   \
+    CONSTEXPR bool operator Op(integer<A, Policy>, integer<B, Policy>) = delete;                   \
     /** \exclude */                                                                                \
     template <typename A, typename B, class Policy,                                                \
               typename = detail::fallback_safe_integer_comparision<A, B>>                          \
-    constexpr bool operator Op(A, integer<B, Policy>) = delete;                                    \
+    CONSTEXPR bool operator Op(A, integer<B, Policy>) = delete;                                    \
     /** \exclude */                                                                                \
     template <typename A, class Policy, typename B,                                                \
               typename = detail::fallback_safe_integer_comparision<A, B>>                          \
-    constexpr bool operator Op(integer<A, Policy>, B) = delete;
+    CONSTEXPR bool operator Op(integer<A, Policy>, B) = delete;
 
     /// \returns The result of the comparison of the stored integer value in the [ts::integer]().
     /// \notes These functions do not participate in overload resolution
@@ -493,7 +493,7 @@ namespace type_safe
     /// \exclude
     template <typename A, typename B, class Policy,
               typename = detail::enable_safe_integer_comparision<A, B>>
-    TYPE_SAFE_FORCE_INLINE constexpr bool operator==(const integer<A, Policy>& a,
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR bool operator==(const integer<A, Policy>& a,
                                                      const integer<B, Policy>& b)
     {
         return static_cast<A>(a) == static_cast<B>(b);
@@ -505,7 +505,7 @@ namespace type_safe
     /// \exclude
     template <typename A, typename B, class Policy,
               typename = detail::enable_safe_integer_comparision<A, B>>
-    TYPE_SAFE_FORCE_INLINE constexpr bool operator!=(const integer<A, Policy>& a,
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR bool operator!=(const integer<A, Policy>& a,
                                                      const integer<B, Policy>& b)
     {
         return static_cast<A>(a) != static_cast<B>(b);
@@ -517,7 +517,7 @@ namespace type_safe
     /// \exclude
     template <typename A, typename B, class Policy,
               typename = detail::enable_safe_integer_comparision<A, B>>
-    TYPE_SAFE_FORCE_INLINE constexpr bool operator<(const integer<A, Policy>& a,
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR bool operator<(const integer<A, Policy>& a,
                                                     const integer<B, Policy>& b)
     {
         return static_cast<A>(a) < static_cast<B>(b);
@@ -529,7 +529,7 @@ namespace type_safe
     /// \exclude
     template <typename A, typename B, class Policy,
               typename = detail::enable_safe_integer_comparision<A, B>>
-    TYPE_SAFE_FORCE_INLINE constexpr bool operator<=(const integer<A, Policy>& a,
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR bool operator<=(const integer<A, Policy>& a,
                                                      const integer<B, Policy>& b)
     {
         return static_cast<A>(a) <= static_cast<B>(b);
@@ -541,7 +541,7 @@ namespace type_safe
     /// \exclude
     template <typename A, typename B, class Policy,
               typename = detail::enable_safe_integer_comparision<A, B>>
-    TYPE_SAFE_FORCE_INLINE constexpr bool operator>(const integer<A, Policy>& a,
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR bool operator>(const integer<A, Policy>& a,
                                                     const integer<B, Policy>& b)
     {
         return static_cast<A>(a) > static_cast<B>(b);
@@ -553,7 +553,7 @@ namespace type_safe
     /// \exclude
     template <typename A, typename B, class Policy,
               typename = detail::enable_safe_integer_comparision<A, B>>
-    TYPE_SAFE_FORCE_INLINE constexpr bool operator>=(const integer<A, Policy>& a,
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR bool operator>=(const integer<A, Policy>& a,
                                                      const integer<B, Policy>& b)
     {
         return static_cast<A>(a) >= static_cast<B>(b);
@@ -569,7 +569,7 @@ namespace type_safe
     /** \exclude return
       * \group int_binary_op */                                            \
     template <typename A, typename B, class Policy>                                                \
-    TYPE_SAFE_FORCE_INLINE constexpr auto operator Op(const A& a, const integer<B, Policy>& b)     \
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR auto operator Op(const A& a, const integer<B, Policy>& b)     \
         ->integer<detail::integer_result_t<A, B>, Policy>                                          \
     {                                                                                              \
         return integer<A, Policy>(a) Op b;                                                         \
@@ -577,7 +577,7 @@ namespace type_safe
     /** \exclude return
       * \group int_binary_op */                                            \
     template <typename A, class Policy, typename B>                                                \
-    TYPE_SAFE_FORCE_INLINE constexpr auto operator Op(const integer<A, Policy>& a, const B& b)     \
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR auto operator Op(const integer<A, Policy>& a, const B& b)     \
         ->integer<detail::integer_result_t<A, B>, Policy>                                          \
     {                                                                                              \
         return a Op integer<B, Policy>(b);                                                         \
@@ -585,15 +585,15 @@ namespace type_safe
     /** \exclude */                                                                                \
     template <typename A, typename B, class Policy,                                                \
               typename = detail::fallback_integer_result<A, B>>                                    \
-    constexpr int operator Op(integer<A, Policy>, integer<B, Policy>) = delete;                    \
+    CONSTEXPR int operator Op(integer<A, Policy>, integer<B, Policy>) = delete;                    \
     /** \exclude */                                                                                \
     template <typename A, typename B, class Policy,                                                \
               typename = detail::fallback_integer_result<A, B>>                                    \
-    constexpr int operator Op(A, integer<B, Policy>) = delete;                                     \
+    CONSTEXPR int operator Op(A, integer<B, Policy>) = delete;                                     \
     /** \exclude */                                                                                \
     template <typename A, class Policy, typename B,                                                \
               typename = detail::fallback_integer_result<A, B>>                                    \
-    constexpr int operator Op(integer<A, Policy>, B) = delete;
+    CONSTEXPR int operator Op(integer<A, Policy>, B) = delete;
 
     /// \returns The result of the binary operation of the stored integer value in the [ts::integer]().
     /// The type is a [ts::integer]() of the bigger integer type.
@@ -603,7 +603,7 @@ namespace type_safe
     /// \module types
     /// \exclude return
     template <typename A, typename B, class Policy>
-    TYPE_SAFE_FORCE_INLINE constexpr auto operator+(const integer<A, Policy>& a,
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR auto operator+(const integer<A, Policy>& a,
                                                     const integer<B, Policy>& b)
         -> integer<detail::integer_result_t<A, B>, Policy>
     {
@@ -615,7 +615,7 @@ namespace type_safe
     /// \group int_binary_op
     /// \exclude return
     template <typename A, typename B, class Policy>
-    TYPE_SAFE_FORCE_INLINE constexpr auto operator-(const integer<A, Policy>& a,
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR auto operator-(const integer<A, Policy>& a,
                                                     const integer<B, Policy>& b)
         -> integer<detail::integer_result_t<A, B>, Policy>
     {
@@ -627,7 +627,7 @@ namespace type_safe
     /// \group int_binary_op
     /// \exclude return
     template <typename A, typename B, class Policy>
-    TYPE_SAFE_FORCE_INLINE constexpr auto operator*(const integer<A, Policy>& a,
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR auto operator*(const integer<A, Policy>& a,
                                                     const integer<B, Policy>& b)
         -> integer<detail::integer_result_t<A, B>, Policy>
     {
@@ -639,7 +639,7 @@ namespace type_safe
     /// \group int_binary_op
     /// \exclude return
     template <typename A, typename B, class Policy>
-    TYPE_SAFE_FORCE_INLINE constexpr auto operator/(const integer<A, Policy>& a,
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR auto operator/(const integer<A, Policy>& a,
                                                     const integer<B, Policy>& b)
         -> integer<detail::integer_result_t<A, B>, Policy>
     {
@@ -651,7 +651,7 @@ namespace type_safe
     /// \group int_binary_op
     /// \exclude return
     template <typename A, typename B, class Policy>
-    TYPE_SAFE_FORCE_INLINE constexpr auto operator%(const integer<A, Policy>& a,
+    TYPE_SAFE_FORCE_INLINE CONSTEXPR auto operator%(const integer<A, Policy>& a,
                                                     const integer<B, Policy>& b)
         -> integer<detail::integer_result_t<A, B>, Policy>
     {

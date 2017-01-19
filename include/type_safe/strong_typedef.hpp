@@ -45,51 +45,59 @@ namespace type_safe
     {
     public:
         /// \effects Value initializes the underlying value.
-        constexpr strong_typedef() : value_()
+        CONSTEXPR strong_typedef() : value_()
         {
         }
 
         /// \effects Copy (1)/moves (2) the underlying value.
         /// \group value_ctor
-        explicit constexpr strong_typedef(const T& value) : value_(value)
+        explicit CONSTEXPR strong_typedef(const T& value) : value_(value)
         {
         }
 
         /// \group value_ctor
-        explicit constexpr strong_typedef(T&& value) noexcept(
+
+        /*
+        explicit CONSTEXPR strong_typedef(T&& value) NOEXCEPT(
             std::is_nothrow_move_constructible<T>::value)
-        : value_(static_cast<T&&>(value)) // std::move() might not be constexpr
+        : value_(static_cast<T&&>(value)) // std::move() might not be CONSTEXPR
         {
-        }
+        }*/
+
+        explicit CONSTEXPR strong_typedef(T&& value)
+           BOOST_NOEXCEPT_IF(BOOST_NOEXCEPT_EXPR(std::is_nothrow_move_constructible<T>::value)) 
+         : value_(static_cast<T&&>(value)) // std::move() might not be CONSTEXPR
+           {
+           }
 
         /// \returns A reference to the stored underlying value.
         /// \group value_conv
-        explicit operator T&() TYPE_SAFE_LVALUE_REF noexcept
+        explicit operator T&() TYPE_SAFE_LVALUE_REF NOEXCEPT
         {
             return value_;
         }
 
         /// \group value_conv
-        explicit constexpr operator const T&() const TYPE_SAFE_LVALUE_REF noexcept
+        explicit CONSTEXPR operator const T&() const TYPE_SAFE_LVALUE_REF NOEXCEPT
         {
             return value_;
         }
 
 #if TYPE_SAFE_USE_REF_QUALIFIERS
         /// \group value_conv
-        explicit operator T &&() && noexcept
+        explicit operator T &&() && NOEXCEPT
         {
             return std::move(value_);
         }
 
         /// \group value_conv
-        explicit constexpr operator const T &&() const && noexcept
+        explicit CONSTEXPR operator const T &&() const && NOEXCEPT
         {
             return std::move(value_);
         }
 #endif
 
-        friend void swap(strong_typedef& a, strong_typedef& b) noexcept
+        friend void swap(strong_typedef& a, strong_typedef& b) NOEXCEPT
         {
             using std::swap;
             swap(static_cast<T&>(a), static_cast<T&>(b));
@@ -115,28 +123,28 @@ namespace type_safe
     /// \returns A reference to the underlying value.
     /// \group strong_typedef_get
     template <class Tag, typename T>
-    constexpr T& get(strong_typedef<Tag, T>& type) noexcept
+    CONSTEXPR T& get(strong_typedef<Tag, T>& type) NOEXCEPT
     {
         return static_cast<T&>(type);
     }
 
     /// \group strong_typedef_get
     template <class Tag, typename T>
-    constexpr const T& get(const strong_typedef<Tag, T>& type) noexcept
+    CONSTEXPR const T& get(const strong_typedef<Tag, T>& type) NOEXCEPT
     {
         return static_cast<const T&>(type);
     }
 
     /// \group strong_typedef_get
     template <class Tag, typename T>
-    constexpr T&& get(strong_typedef<Tag, T>&& type) noexcept
+    CONSTEXPR T&& get(strong_typedef<Tag, T>&& type) NOEXCEPT
     {
         return static_cast<T&&>(static_cast<T&>(type));
     }
 
     /// \group strong_typedef_get
     template <class Tag, typename T>
-    constexpr const T&& get(const strong_typedef<Tag, T>&& type) noexcept
+    CONSTEXPR const T&& get(const strong_typedef<Tag, T>&& type) NOEXCEPT
     {
         return static_cast<const T&&>(static_cast<const T&>(type));
     }
@@ -150,13 +158,13 @@ namespace type_safe
         template <class StrongTypedef, typename Result = bool_t>
         struct equality_comparison
         {
-            friend constexpr Result operator==(const StrongTypedef& lhs, const StrongTypedef& rhs)
+            friend CONSTEXPR Result operator==(const StrongTypedef& lhs, const StrongTypedef& rhs)
             {
                 using type = underlying_type<StrongTypedef>;
                 return static_cast<const type&>(lhs) == static_cast<const type&>(rhs);
             }
 
-            friend constexpr Result operator!=(const StrongTypedef& lhs, const StrongTypedef& rhs)
+            friend CONSTEXPR Result operator!=(const StrongTypedef& lhs, const StrongTypedef& rhs)
             {
                 return !(lhs == rhs);
             }
@@ -166,26 +174,26 @@ namespace type_safe
         struct mixed_equality_comparison
         {
             /// \group equal
-            friend constexpr Result operator==(const StrongTypedef& lhs, const Other& rhs)
+            friend CONSTEXPR Result operator==(const StrongTypedef& lhs, const Other& rhs)
             {
                 using type = underlying_type<StrongTypedef>;
                 return static_cast<const type&>(lhs) == static_cast<const type&>(rhs);
             }
 
             /// \group equal
-            friend constexpr Result operator==(const Other& lhs, const StrongTypedef& rhs)
+            friend CONSTEXPR Result operator==(const Other& lhs, const StrongTypedef& rhs)
             {
                 return rhs == lhs;
             }
 
             /// \group not_equal
-            friend constexpr Result operator!=(const StrongTypedef& lhs, const Other& rhs)
+            friend CONSTEXPR Result operator!=(const StrongTypedef& lhs, const Other& rhs)
             {
                 return !(lhs == rhs);
             }
 
             /// \group not_equal
-            friend constexpr Result operator!=(const Other& lhs, const StrongTypedef& rhs)
+            friend CONSTEXPR Result operator!=(const Other& lhs, const StrongTypedef& rhs)
             {
                 return !(rhs == lhs);
             }
@@ -194,23 +202,23 @@ namespace type_safe
         template <class StrongTypedef, typename Result = bool_t>
         struct relational_comparison
         {
-            friend constexpr Result operator<(const StrongTypedef& lhs, const StrongTypedef& rhs)
+            friend CONSTEXPR Result operator<(const StrongTypedef& lhs, const StrongTypedef& rhs)
             {
                 using type = underlying_type<StrongTypedef>;
                 return static_cast<const type&>(lhs) < static_cast<const type&>(rhs);
             }
 
-            friend constexpr Result operator>(const StrongTypedef& lhs, const StrongTypedef& rhs)
+            friend CONSTEXPR Result operator>(const StrongTypedef& lhs, const StrongTypedef& rhs)
             {
                 return rhs < lhs;
             }
 
-            friend constexpr Result operator<=(const StrongTypedef& lhs, const StrongTypedef& rhs)
+            friend CONSTEXPR Result operator<=(const StrongTypedef& lhs, const StrongTypedef& rhs)
             {
                 return !(rhs < lhs);
             }
 
-            friend constexpr Result operator>=(const StrongTypedef& lhs, const StrongTypedef& rhs)
+            friend CONSTEXPR Result operator>=(const StrongTypedef& lhs, const StrongTypedef& rhs)
             {
                 return !(lhs < rhs);
             }
@@ -220,51 +228,51 @@ namespace type_safe
         struct mixed_relational_comparison
         {
             /// \group less
-            friend constexpr Result operator<(const StrongTypedef& lhs, const Other& rhs)
+            friend CONSTEXPR Result operator<(const StrongTypedef& lhs, const Other& rhs)
             {
                 using type = underlying_type<StrongTypedef>;
                 return static_cast<const type&>(lhs) < static_cast<const type&>(rhs);
             }
 
             /// \group less
-            friend constexpr Result operator<(const Other& lhs, const StrongTypedef& rhs)
+            friend CONSTEXPR Result operator<(const Other& lhs, const StrongTypedef& rhs)
             {
                 using type = underlying_type<StrongTypedef>;
                 return static_cast<const type&>(lhs) < static_cast<const type&>(rhs);
             }
 
             /// \group greater
-            friend constexpr Result operator>(const StrongTypedef& lhs, const Other& rhs)
+            friend CONSTEXPR Result operator>(const StrongTypedef& lhs, const Other& rhs)
             {
                 return rhs < lhs;
             }
 
             /// \group greater
-            friend constexpr Result operator>(const Other& lhs, const StrongTypedef& rhs)
+            friend CONSTEXPR Result operator>(const Other& lhs, const StrongTypedef& rhs)
             {
                 return rhs < lhs;
             }
 
             /// \group less_eq
-            friend constexpr Result operator<=(const StrongTypedef& lhs, const Other& rhs)
+            friend CONSTEXPR Result operator<=(const StrongTypedef& lhs, const Other& rhs)
             {
                 return !(rhs < lhs);
             }
 
             /// \group less_eq
-            friend constexpr Result operator<=(const Other& lhs, const StrongTypedef& rhs)
+            friend CONSTEXPR Result operator<=(const Other& lhs, const StrongTypedef& rhs)
             {
                 return !(rhs < lhs);
             }
 
             /// \group greater_equal
-            friend constexpr Result operator>=(const StrongTypedef& lhs, const Other& rhs)
+            friend CONSTEXPR Result operator>=(const StrongTypedef& lhs, const Other& rhs)
             {
                 return !(lhs < rhs);
             }
 
             /// \group greater_equal
-            friend constexpr Result operator>=(const Other& lhs, const StrongTypedef& rhs)
+            friend CONSTEXPR Result operator>=(const Other& lhs, const StrongTypedef& rhs)
             {
                 return !(lhs < rhs);
             }
@@ -299,23 +307,23 @@ namespace type_safe
             return std::move(lhs);                                                                 \
         }                                                                                          \
                                                                                                    \
-        friend constexpr StrongTypedef operator Op(const StrongTypedef& lhs,                       \
+        friend CONSTEXPR StrongTypedef operator Op(const StrongTypedef& lhs,                       \
                                                    const StrongTypedef& rhs)                       \
         {                                                                                          \
             return StrongTypedef(get(lhs) Op get(rhs));                                            \
         }                                                                                          \
                                                                                                    \
-        friend constexpr StrongTypedef operator Op(StrongTypedef&& lhs, const StrongTypedef& rhs)  \
+        friend CONSTEXPR StrongTypedef operator Op(StrongTypedef&& lhs, const StrongTypedef& rhs)  \
         {                                                                                          \
             return StrongTypedef(get(std::move(lhs)) Op get(rhs));                                 \
         }                                                                                          \
                                                                                                    \
-        friend constexpr StrongTypedef operator Op(const StrongTypedef& lhs, StrongTypedef&& rhs)  \
+        friend CONSTEXPR StrongTypedef operator Op(const StrongTypedef& lhs, StrongTypedef&& rhs)  \
         {                                                                                          \
             return StrongTypedef(get(lhs) Op get(std::move(rhs)));                                 \
         }                                                                                          \
                                                                                                    \
-        friend constexpr StrongTypedef operator Op(StrongTypedef&& lhs, StrongTypedef&& rhs)       \
+        friend CONSTEXPR StrongTypedef operator Op(StrongTypedef&& lhs, StrongTypedef&& rhs)       \
         {                                                                                          \
             return StrongTypedef(get(std::move(lhs)) Op get(std::move(rhs)));                      \
         }                                                                                          \
@@ -338,25 +346,25 @@ namespace type_safe
             return std::move(lhs);                                                                 \
         }                                                                                          \
                                                                                                    \
-        friend constexpr StrongTypedef operator Op(const StrongTypedef& lhs, const Other& rhs)     \
+        friend CONSTEXPR StrongTypedef operator Op(const StrongTypedef& lhs, const Other& rhs)     \
         {                                                                                          \
             using type = underlying_type<StrongTypedef>;                                           \
             return StrongTypedef(get(lhs) Op static_cast<const type&>(rhs));                       \
         }                                                                                          \
                                                                                                    \
-        friend constexpr StrongTypedef operator Op(StrongTypedef&& lhs, const Other& rhs)          \
+        friend CONSTEXPR StrongTypedef operator Op(StrongTypedef&& lhs, const Other& rhs)          \
         {                                                                                          \
             using type = underlying_type<StrongTypedef>;                                           \
             return StrongTypedef(get(std::move(lhs)) Op static_cast<const type&>(rhs));            \
         }                                                                                          \
                                                                                                    \
-        friend constexpr StrongTypedef operator Op(const Other& lhs, const StrongTypedef& rhs)     \
+        friend CONSTEXPR StrongTypedef operator Op(const Other& lhs, const StrongTypedef& rhs)     \
         {                                                                                          \
             using type = underlying_type<StrongTypedef>;                                           \
             return StrongTypedef(static_cast<const type&>(lhs) Op get(rhs));                       \
         }                                                                                          \
                                                                                                    \
-        friend constexpr StrongTypedef operator Op(const Other& lhs, StrongTypedef&& rhs)          \
+        friend CONSTEXPR StrongTypedef operator Op(const Other& lhs, StrongTypedef&& rhs)          \
         {                                                                                          \
             using type = underlying_type<StrongTypedef>;                                           \
             return StrongTypedef(static_cast<const type&>(lhs) Op get(std::move(rhs)));            \
@@ -410,7 +418,7 @@ namespace type_safe
         template <class StrongTypedef>
         struct unary_plus
         {
-            constexpr StrongTypedef operator+() const
+            CONSTEXPR StrongTypedef operator+() const
             {
                 using type = underlying_type<StrongTypedef>;
                 return StrongTypedef(
@@ -421,7 +429,7 @@ namespace type_safe
         template <class StrongTypedef>
         struct unary_minus
         {
-            constexpr StrongTypedef operator-() const
+            CONSTEXPR StrongTypedef operator-() const
             {
                 using type = underlying_type<StrongTypedef>;
                 return StrongTypedef(
